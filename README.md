@@ -1,6 +1,10 @@
 # vsss_communication
 Repositório criado para interface de comunicação utilizada na categoria Very Small Size Soccer VSSS
 
+# Requisitos
+* Python 3.8+
+* Google protocol buffers (protoc v3.6.1)
+
 # Instalação
 Para utilização deste pacote de comunicação, é necessário realizar a instalação por meio dos seguintes comandos:
 
