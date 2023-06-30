@@ -2,7 +2,8 @@ from proto import Command
 import socket
 
 class StrategyControl():
-    def __init__(self, ip = '127.0.0.1', port = 20011, logger=False) -> None:
+    def __init__(self, ip = '127.0.0.1', port = 20011, actuator_ip = '127.0.0.1', 
+                 actuator_port = 20012, logger=False) -> None:
         #  Protobuff message atributes
         self.robot_id = 0  
         self.yellow_team = 0
@@ -15,12 +16,13 @@ class StrategyControl():
         self.buffer_size = 1024
 
         #  Receiver parameters
-        self.eletronica_ip = '127.0.0.1' 
-        self.eletronica_porta = 20012
+        self.actuator_ip = actuator_ip
+        self.actuator_port = actuator_port
+
+        # Logger control
+        self.logger=logger
 
         self.create_socket()
-
-        self.logger=logger
 
     def create_socket(self):
         self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -42,7 +44,7 @@ class StrategyControl():
         msg.wheel_right = self.wheel_right
 
         try: 
-            self.socket.sendto(msg.SerializeToString(), (self.eletronica_ip, self.eletronica_porta))
+            self.socket.sendto(msg.SerializeToString(), (self.actuator_ip, self.actuator_port))
             if self.logger: print("[S&C] Enviado!")
 
         except socket.error as e:
