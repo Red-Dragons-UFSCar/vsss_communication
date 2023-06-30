@@ -77,6 +77,15 @@ class Actuator():
         self.socket.setblocking(False) 
         self.socket.settimeout(0.0)
 
+    def convert_parameters(self, msgRaw):
+        msg = Command()
+        msg.ParseFromString(msgRaw)
+        
+        self.robot_id = msg.id
+        self.yellow_team = msg.yellowteam
+        self.wheel_left = msg.wheel_left
+        self.wheel_right = msg.wheel_right
+
     def update(self):
         try: 
             bytesAddressPair = self.socket.recvfrom(self.buffer_size)
@@ -88,18 +97,15 @@ class Actuator():
             
         except socket.error as e:
             if e.errno == socket.errno.EAGAIN:
-                print("[ACTUATOR] Falha ao receber. Socket bloqueado.")
+                if self.logger:
+                    print("[ACTUATOR] Falha ao receber. Socket bloqueado.")
             else:
                 print("[ACTUATOR] Socket error:", e)
 
-    def convert_parameters(self, msgRaw):
-        msg = Command()
-        msg.ParseFromString(msgRaw)
-        
-        self.robot_id = msg.id
-        self.yellow_team = msg.yellowteam
-        self.wheel_left = msg.wheel_left
-        self.wheel_right = msg.wheel_right
+    def get_data(self):
+        data = dict([ ("robot_id", self.robot_id), ("yellow_team", self.yellow_team),
+                      ("wheel_left", self.wheel_left), ("wheel_right", self.wheel_right) ])
+        return data
 
 
     

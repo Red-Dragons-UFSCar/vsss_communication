@@ -4,7 +4,8 @@ eletronica = Actuator()
 
 while True:
     eletronica.update()
-    print("Indicie: ", eletronica.robot_id)
-    print("Time: ", eletronica.yellow_team)
-    print("Velocidade Esquerda: ", eletronica.wheel_left)
-    print("Velocidade Direita: ", eletronica.wheel_right)
+    data = eletronica.get_data()
+    print("Indicie: ", data["robot_id"])
+    print("Time: ", data["yellow_team"])
+    print("Velocidade Esquerda: ", data["wheel_left"])
+    print("Velocidade Direita: ", data["wheel_right"])
