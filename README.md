@@ -16,10 +16,11 @@ sudo python3 setup.py install
 # Teste
 A realização de testes são a partir dos arquivos do diretório examples. Em dois terminais diferentes, rode os códgos a seguir:
 
+
 Terminal 1:
 ```bash
 cd examples
-python3 eletronica.py
+python3 visao.py
 ```
 
 Terminal 2:
@@ -28,4 +29,11 @@ cd examples
 python3 controle.py
 ```
 
-Enquanto o arquivo controle.py não enviar nenhuma informação, o arquivo eletronica manterá a velocidade recebida em 0. Entretanto, quando o controle.py é iniciado, a velocidade 10 é recebida.
+Terminal 3:
+```bash
+cd examples
+python3 eletronica.py
+```
+
+A execução dos três terminais deve proporcionar para você o envio e recebimento de mensagens de todas as áreas. Caso algo esteja errado, uma mensagem de erro será exibida no terminal.
+Nota-se também que os arquivos não precisam ser executados nesta ordem, em qualquer ordem eles vão funcionar como o esperado, desde que todos os arquivos sejam executados.
