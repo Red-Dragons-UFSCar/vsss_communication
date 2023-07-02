@@ -1,6 +1,6 @@
 from vss_communication import Actuator
 
-eletronica = Actuator()
+eletronica = Actuator(logger=True)
 
 while True:
     eletronica.update()  # Atualiza as informações recebidas do controle e estratégia

@@ -1,6 +1,6 @@
 from vss_communication import Vision
 
-vision = Vision()
+vision = Vision(logger=True)
 
 while True:
     # Criação padrão das mensagens
