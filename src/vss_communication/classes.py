@@ -146,6 +146,11 @@ class StrategyControl():
 
     def get_data(self):
         return self.frame
+    
+    def get_data_Red(self):
+        return dict([("ball", self.frame["ball"]), 
+                    ("our_robots", self.frame["robots_blue"]), 
+                    ("their_bots", self.frame["robots_yellow"])])
             
 
 class Actuator():
