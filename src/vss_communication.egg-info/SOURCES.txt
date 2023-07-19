@@ -1,0 +1,12 @@
+setup.py
+proto/__init__.py
+proto/command_pb2.py
+proto/common_pb2.py
+proto/packet_pb2.py
+proto/replacement_pb2.py
+vss_communication/__init__.py
+vss_communication/classes.py
+vss_communication.egg-info/PKG-INFO
+vss_communication.egg-info/SOURCES.txt
+vss_communication.egg-info/dependency_links.txt
+vss_communication.egg-info/top_level.txt
