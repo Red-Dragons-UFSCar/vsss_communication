@@ -1,4 +1,4 @@
-from proto import Command, Environment
+from proto import Command, Environment, VSSRef_Command
 import socket
 import time
 
@@ -293,3 +293,84 @@ class Vision():
                     print("[Vision] Falha ao enviar. Socket bloqueado")
             else:
                 print("[Vision] Socket error:", e)
+
+class Referee():
+    def __init__(self, ip='127.0.0.1', port_server=20014, 
+                 port_client=20015, logger=True) -> None:
+        self.ip = ip
+        self.port = port_server
+        self.buffer_size = 1024
+
+        self.create_socket()
+
+        self.logger = logger
+        
+        self.foul = 0
+        self.teamcolor = 0
+        self.foulQuadrant = 0
+        self.timestamp = 0
+        self.gameHalf = 0
+
+        self.error = 0
+    
+    def create_socket(self):
+        self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind((self.ip, self.port))
+        self.socket.setblocking(False) 
+        self.socket.settimeout(0.0)
+
+    def send_mensage(self, fouls):
+        msg = VSSRef_Command()
+
+        msg.foul = fouls["foul"]
+        msg.teamcolor = fouls["teamcolor"]
+        msg.foulQuadrant = fouls["foulQuadrant"]
+        msg.timestamp = fouls["timestamp"]
+        msg.gameHalf = fouls["gameHalf"]
+
+        try: 
+            self.socket.sendto(msg.SerializeToString(), (self.ip, self.port))
+            if self.logger: print("[REFEREE] Enviado!")
+
+        except socket.error as e:
+            if e.errno == socket.errno.EAGAIN:
+                if self.logger:
+                    print("[REFEREE] Falha ao enviar. Socket bloqueado")
+            else:
+                print("[REFEREE] Socket error:", e)
+
+    def update(self):
+        try: 
+            bytesAddressPair = self.socket.recvfrom(self.buffer_size)
+            msgRaw = bytesAddressPair[0]
+            self.convert_parameters(msgRaw)
+            self.error = 0
+
+            if self.logger:
+                print("[REFEREE] Recebido!")
+            
+        except socket.error as e:
+            if e.errno == socket.errno.EAGAIN:
+                self.error = 1
+                if self.logger:
+                    print("[REFEREE] Falha ao receber. Socket bloqueado.")
+            else:
+                print("[REFEREE] Socket error:", e)
+                self.error = 2
+
+    def convert_parameters(self, msgRaw):
+        msg = VSSRef_Command()
+        msg.ParseFromString(msgRaw)
+        
+        self.foul = msg.foul
+        self.teamcolor = msg.teamcolor
+        self.foulQuadrant = msg.foulQuadrant
+        self.timestamp = msg.timestamp
+        self.gameHalf = msg.gameHalf
+
+    def get_data(self):
+        data = dict([ ("foul", self.foul), ("teamcolor", self.teamcolor), 
+                      ("foulQuadrant", self.foulQuadrant), ("timestamp", self.timestamp), 
+                      ("gameHalf", self.gameHalf) ])
+        return data, self.error
