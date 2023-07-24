@@ -149,12 +149,21 @@ class StrategyControl():
                 print("[S&C] Socket error:", e)
 
     def get_data(self):
+<<<<<<< HEAD
         return self.frame, self.error
     
     def get_data_Red(self):
         return dict([("ball", self.frame["ball"]), 
                     ("our_bots", self.frame["robots_blue"]), 
                     ("their_bots", self.frame["robots_yellow"])]), self.error
+=======
+        return self.frame
+    
+    def get_data_Red(self):
+        return dict([("ball", self.frame["ball"]), 
+                    ("our_robots", self.frame["robots_blue"]), 
+                    ("their_bots", self.frame["robots_yellow"])])
+>>>>>>> 82dd2cdba522b5d2bffbae1bce7f68f515a7aa86
             
 
 class Actuator():
