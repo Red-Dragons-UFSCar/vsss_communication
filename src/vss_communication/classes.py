@@ -1,5 +1,6 @@
 from proto import Command, Environment
 import socket
+import time
 
 class StrategyControl():
     def __init__(self, ip = '127.0.0.1', port = 20011, actuator_ip = '127.0.0.1', 
@@ -133,19 +134,27 @@ class StrategyControl():
             bytesAddressPair = self.socket.recvfrom(self.buffer_size)
             msgRaw = bytesAddressPair[0]
             self.convert_parameters(msgRaw)
+            self.error = 0
 
             if self.logger:
                 print("[S&C] Recebido!")
             
         except socket.error as e:
             if e.errno == socket.errno.EAGAIN:
+                self.error = 1
                 if self.logger:
                     print("[S&C] Falha ao receber. Socket bloqueado.")
             else:
+                self.error = 2
                 print("[S&C] Socket error:", e)
 
     def get_data(self):
-        return self.frame
+        return self.frame, self.error
+    
+    def get_data_Red(self):
+        return dict([("ball", self.frame["ball"]), 
+                    ("our_bots", self.frame["robots_blue"]), 
+                    ("their_bots", self.frame["robots_yellow"])]), self.error
             
 
 class Actuator():
@@ -164,6 +173,8 @@ class Actuator():
         self.create_socket()
 
         self.logger=logger
+
+        self.error = 1
 
     def create_socket(self):
         self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -186,21 +197,24 @@ class Actuator():
             bytesAddressPair = self.socket.recvfrom(self.buffer_size)
             msgRaw = bytesAddressPair[0]
             self.convert_parameters(msgRaw)
+            self.error = 0
 
             if self.logger:
                 print("[ACTUATOR] Recebido!")
             
         except socket.error as e:
             if e.errno == socket.errno.EAGAIN:
+                self.error = 1
                 if self.logger:
                     print("[ACTUATOR] Falha ao receber. Socket bloqueado.")
             else:
                 print("[ACTUATOR] Socket error:", e)
+                self.error = 2
 
     def get_data(self):
         data = dict([ ("robot_id", self.robot_id), ("yellow_team", self.yellow_team),
                       ("wheel_left", self.wheel_left), ("wheel_right", self.wheel_right) ])
-        return data
+        return data, self.error
 
 
 class Vision():
