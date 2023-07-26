@@ -295,10 +295,9 @@ class Vision():
                 print("[Vision] Socket error:", e)
 
 class Referee():
-    def __init__(self, ip='127.0.0.1', port_server=20014, 
-                 port_client=20015, logger=True) -> None:
+    def __init__(self, ip='127.0.0.1', port=20014, logger=True) -> None:
         self.ip = ip
-        self.port = port_server
+        self.port = port
         self.buffer_size = 1024
 
         self.create_socket()
@@ -370,7 +369,11 @@ class Referee():
         self.gameHalf = msg.gameHalf
 
     def get_data(self):
-        data = dict([ ("foul", self.foul), ("teamcolor", self.teamcolor), 
-                      ("foulQuadrant", self.foulQuadrant), ("timestamp", self.timestamp), 
-                      ("gameHalf", self.gameHalf) ])
+        data = dict([("foul", self.foul), ("teamcolor", self.teamcolor), 
+                     ("foulQuadrant", self.foulQuadrant), ("timestamp", self.timestamp), 
+                     ("gameHalf", self.gameHalf)])
         return data, self.error
+
+    def close_socket(self):
+        print("[REFEREE] Socket fechado.")
+        self.socket.close()
