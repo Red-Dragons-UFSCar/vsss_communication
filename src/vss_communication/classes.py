@@ -231,7 +231,7 @@ class Vision():
         self.buffer_size = 1024
 
         self.strategy_ip = '127.0.0.1'
-        self.strategy_port = 20011
+        self.strategy_port = 20020
 
         self.create_socket()
 
