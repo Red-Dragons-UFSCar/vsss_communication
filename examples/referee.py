@@ -1,7 +1,7 @@
 from vss_communication import Referee
 import time
 
-ref = Referee(ip='224.5.23.2', port_server=10003)
+ref = Referee()
 
 # Comunicação com a eletronica
 dicionario_faltas = dict([ ("foul", 4), ("teamcolor", 0), ("foulQuadrant", 0), 
